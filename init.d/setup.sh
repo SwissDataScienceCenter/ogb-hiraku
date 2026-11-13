@@ -138,28 +138,6 @@ setup_iroh_ssh() {
     echo "Started iroh-ssh server"
 }
 
-setup_aws_cli() (
-    local aws_cli_bin="${BIN_FOLDER}/aws"
-    local installer
-
-    if [ -x "${aws_cli_bin}" ]; then
-        echo "AWS CLI already installed"
-        "${aws_cli_bin}" --version
-        exit 0
-    fi
-
-    installer="$(mktemp)"
-    trap 'rm -f "${installer}"' EXIT
-
-    mkdir -p "${BIN_FOLDER}" "${RENKU_MOUNT_DIR}/.local/share"
-    curl -fsSL https://awscli.amazonaws.com/v2/install.sh -o "${installer}"
-    XDG_DATA_HOME="${RENKU_MOUNT_DIR}/.local/share" \
-    XDG_BIN_HOME="${BIN_FOLDER}" \
-        bash "${installer}"
-
-    "${aws_cli_bin}" --version
-)
-
 setup_node_tools() {
     local -a packages=()
 
@@ -233,12 +211,10 @@ else
     echo "WARNING: sshd setup failed; continuing session launch"
 fi
 
-task_names=("iroh-ssh" "AWS CLI" "Node tools" "Renku CLI")
+task_names=("iroh-ssh" "Node tools" "Renku CLI")
 task_pids=()
 
 setup_iroh_ssh &
-task_pids+=("$!")
-setup_aws_cli &
 task_pids+=("$!")
 setup_node_tools &
 task_pids+=("$!")

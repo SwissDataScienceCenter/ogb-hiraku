@@ -27,7 +27,7 @@ RDKit 2026.9.2 and scikit-learn 1.9.1: validation ROC-AUC **0.7758**,
 test ROC-AUC **0.7289** (ten seeds; standard deviations round to 0.0000).
 Both the initial dataset download and cached-dataset run completed successfully.
 The Renku Linux CPU image also completed the full ten-seed benchmark with the
-same scores; Pi, Claude Code, Codex, AWS CLI, rnk, and SDSC model discovery were
+same scores; Pi, Claude Code, Codex, rnk, and SDSC model discovery were
 verified in the VS Code session. SSH requires the optional mounted key secrets.
 
 ## Renku build from code
@@ -115,7 +115,7 @@ from the demo's reproducible wheel and lockfile.
 ### Session tools and SSH
 
 As in the upstream base, the startup hook installs Node 24, Pi, Claude Code,
-Codex, AWS CLI and iroh-ssh at runtime, then configures persistent agent directories
+Codex and iroh-ssh at runtime, then configures persistent agent directories
 and the Pi SDSC LLM OAuth extension. It additionally installs Renku CLI `rnk`
 v0.7.2 from its official Linux release into `$RENKU_MOUNT_DIR/.local/bin`, without
 sudo or Python dependencies. Existing executables are reused on subsequent starts.
@@ -132,7 +132,7 @@ Without SSH secrets, the other tools still initialize. After startup, use
 [upstream SSH instructions](https://gitlab.datascience.ch/kirschnj/renku-docker-base).
 
 In a session terminal, verify `rnk --help`, `pi --version`, `claude --version`,
-`codex --version`, `aws --version`, and `iroh-ssh --help`. Authenticate interactively
+`codex --version` and `iroh-ssh --help`. Authenticate interactively
 with `rnk login`; in Pi use `/login` and choose SDSC LLM (OIDC).
 No credentials are included in the image or repository.
 
