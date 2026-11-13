@@ -26,7 +26,9 @@ Validated locally with Python 3.12.12, NumPy 1.26.4, PyTorch 2.5.1,
 RDKit 2026.9.2 and scikit-learn 1.9.1: validation ROC-AUC **0.7758**,
 test ROC-AUC **0.7289** (ten seeds; standard deviations round to 0.0000).
 Both the initial dataset download and cached-dataset run completed successfully.
-The Renku Linux image and runtime services still need validation after push/build.
+The Renku Linux CPU image also completed the full ten-seed benchmark with the
+same scores; Pi, Claude Code, Codex, AWS CLI, rnk, and SDSC model discovery were
+verified in the VS Code session. SSH requires the optional mounted key secrets.
 
 ## Renku build from code
 
@@ -42,6 +44,7 @@ After committing and pushing this branch, add/select a launcher with:
 | Frontend | VS Code (`vscodium`) |
 | Context directory | `.` |
 | Platform | `linux/amd64` |
+| Launcher environment variable | `UV_PROJECT_ENVIRONMENT=/layers/paketo-buildpacks_python-package-managers-run/uv-env/venv` |
 
 Select an accessible CPU resource class explicitly; start with at least 2 CPUs
 and 8 GiB RAM for the benchmark plus editor and agents. Use a larger class if
@@ -57,13 +60,16 @@ image's build revision. In a fresh session terminal run:
 ```bash
 cd /home/renku/work/hiraku-all-hands
 git switch kirschnj/ogb-benchmark
-uv run --locked --no-sync ogbg-molhiv.py
+uv run --locked ogbg-molhiv.py
 ```
 
-`--no-sync` reuses the dependencies already built into the image and inherited by
-Renku's session virtual environment. A normal `uv run` can reinstall inherited
-packages into the writable environment, duplicating the image's dependencies.
-Use `uv sync --locked` when intentionally changing the session dependencies.
+The launcher variable targets the populated image virtualenv directly, so normal
+uv sync/run commands reuse its installed packages. The startup hook reasserts
+that setting and activates the same environment in terminals because Renku's
+dependency-manager hook otherwise resets it to a writable wrapper virtualenv.
+That wrapper inherits image packages, but uv sync can reinstall them, duplicating
+the image's dependencies. For intentional dependency changes use `uv add` or
+`uv sync --locked`, then rebuild the image to make them reproducible for everyone.
 Rebuild after dependency/build configuration
 changes; code-only changes require a fresh checkout/session rather than a rebuild.
 
