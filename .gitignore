@@ -8,3 +8,4 @@ scratch/
 .keys/
 .ssh/
 .local/
+/.codex/config.toml

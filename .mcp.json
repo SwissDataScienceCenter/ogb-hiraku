@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "hiraku": {
+      "command": "uv",
+      "args": [
+        "run",
+        "hiraku",
+        "mcp",
+        "serve"
+      ]
+    }
+  }
+}
