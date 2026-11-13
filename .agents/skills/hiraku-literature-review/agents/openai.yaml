@@ -1,0 +1,16 @@
+interface:
+  display_name: "Hiraku Literature Review"
+  short_description: "Discover papers and save literature reviews in Hiraku"
+  default_prompt: "Use $hiraku-literature-review to review the literature for my research question."
+
+policy:
+  allow_implicit_invocation: true
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "hiraku"
+      description: "Hiraku project MCP server"
+    - type: "mcp"
+      value: "alphaxiv"
+      description: "alphaXiv scholarly paper discovery and analysis"

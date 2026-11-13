@@ -218,3 +218,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project-specific
+.venv/
+__pycache__/
+*.py[cod]
+scratch/
+.pi/
+.claude/
+.codex/
+.keys/
+.ssh/
+.local/
+/.codex/config.toml
