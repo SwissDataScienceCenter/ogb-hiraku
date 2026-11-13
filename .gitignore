@@ -19,7 +19,7 @@ lib64/
 parts/
 sdist/
 var/
-wheels/
+# Release wheels in wheels/ are intentionally checked in for Renku builds.
 share/python-wheels/
 *.egg-info/
 .installed.cfg

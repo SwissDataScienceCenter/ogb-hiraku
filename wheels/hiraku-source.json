@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/SwissDataScienceCenter/hiraku.git",
+  "ref": "feat/renku-api-psij-executor",
+  "commit": "abc9917a58add9a9a465ef3afdcb7a05f07974cf",
+  "version": "0.1.1",
+  "wheel": "hiraku-0.1.1-py3-none-any.whl",
+  "sha256": "aedab6607aad5321701c5364169f0b4d6372ff3be0253114fdd5481d5ddc5835"
+}
