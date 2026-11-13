@@ -1,0 +1,7 @@
+source:
+  type: mlflow
+  experiment_name: ogbg-molhiv
+  tracking_uri: https://mlflow.dev.renku.ch
+metrics:
+- name: valid/rocauc
+  direction: maximize
