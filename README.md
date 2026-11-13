@@ -18,6 +18,7 @@ Python 3.12 is selected in `.python-version`. Dependencies are declared in
 `pyproject.toml` and resolved in `uv.lock`. The existing NumPy <2 and PyTorch <2.6
 constraints are retained for OGB 1.3.6 compatibility; its cached dataset loader
 uses `torch.load` without opting out of the newer weights-only default.
+Linux uses the official PyTorch CPU wheels: this baseline does not use CUDA.
 The first run downloads the dataset into `scratch/ogb/` inside this repository.
 Dataset downloads, virtual environments, agent state, and credentials are ignored.
 
@@ -50,7 +51,20 @@ Renku's Python builder installs the locked uv dependencies. `project.toml`
 also includes the base environment's Debian packages, startup hook and SDSC LLM
 extension. Repository source is checked out at session start under
 `/home/renku/work/hiraku-all-hands`; it is not baked into the environment image.
-Run the benchmark from that directory. Rebuild after dependency/build configuration
+Renku initially checks out the repository's default branch independently of the
+image's build revision. In a fresh session terminal run:
+
+```bash
+cd /home/renku/work/hiraku-all-hands
+git switch kirschnj/ogb-benchmark
+uv run --locked --no-sync ogbg-molhiv.py
+```
+
+`--no-sync` reuses the dependencies already built into the image and inherited by
+Renku's session virtual environment. A normal `uv run` can reinstall inherited
+packages into the writable environment, duplicating the image's dependencies.
+Use `uv sync --locked` when intentionally changing the session dependencies.
+Rebuild after dependency/build configuration
 changes; code-only changes require a fresh checkout/session rather than a rebuild.
 
 ### Session tools and SSH
@@ -62,6 +76,8 @@ v0.7.2 from its official Linux release into `$RENKU_MOUNT_DIR/.local/bin`, witho
 sudo or Python dependencies. Existing executables are reused on subsequent starts.
 These installations need outbound network access and can delay the first launch.
 Optional setup failures are logged without blocking the editor.
+Node and npm come from NVM's Node 24 installation; the redundant Debian Node/npm
+packages are omitted because their relocated buildpack paths caused Node to abort.
 
 For SSH, configure Renku session secret files `authorized_keys` and
 `ssh_host_ed25519_key`. Optionally provide `irohssh_ed25519` and

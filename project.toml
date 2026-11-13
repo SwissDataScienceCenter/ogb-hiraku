@@ -24,8 +24,6 @@ include = [
 install = [
     "openssh-server",
     "openssh-client",
-    "nodejs",
-    "npm",
     "socat",
     "bubblewrap",
     "ripgrep",
