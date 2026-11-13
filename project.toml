@@ -1,0 +1,37 @@
+schema-version = "0.2"
+name = "Hiraku All Hands"
+id = "hiraku-all-hands"
+authors = [
+    "Matthias Meyer <Matthias.Meyer@sdsc.ethz.ch>"
+]
+source-url = "https://github.com/SwissDataScienceCenter/hiraku-all-hands.git"
+documentation-url = "https://github.com/SwissDataScienceCenter/hiraku-all-hands"
+[[_.licenses]]
+type = "Apache-2.0"
+
+[io.buildpacks]
+include = [
+    "init.d/",
+    "project.toml",
+    "pyproject.toml",
+    "uv.lock",
+    ".python-version",
+    "README.md",
+    "sdsc-llm.ts"
+]
+
+[com.heroku.buildpacks.deb-packages]
+install = [
+    "openssh-server",
+    "openssh-client",
+    "nodejs",
+    "npm",
+    "socat",
+    "bubblewrap",
+    "ripgrep",
+    "curl",
+    "jq",
+    "unzip",
+    "rsync",
+    "htop"
+]
