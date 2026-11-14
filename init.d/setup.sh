@@ -138,28 +138,6 @@ setup_iroh_ssh() {
     echo "Started iroh-ssh server"
 }
 
-setup_aws_cli() (
-    local aws_cli_bin="${BIN_FOLDER}/aws"
-    local installer
-
-    if [ -x "${aws_cli_bin}" ]; then
-        echo "AWS CLI already installed"
-        "${aws_cli_bin}" --version
-        exit 0
-    fi
-
-    installer="$(mktemp)"
-    trap 'rm -f "${installer}"' EXIT
-
-    mkdir -p "${BIN_FOLDER}" "${RENKU_MOUNT_DIR}/.local/share"
-    curl -fsSL https://awscli.amazonaws.com/v2/install.sh -o "${installer}"
-    XDG_DATA_HOME="${RENKU_MOUNT_DIR}/.local/share" \
-    XDG_BIN_HOME="${BIN_FOLDER}" \
-        bash "${installer}"
-
-    "${aws_cli_bin}" --version
-)
-
 setup_node_tools() {
     local -a packages=()
 
@@ -205,20 +183,6 @@ setup_renku_cli() (
 setup_agent_configuration() {
     local sdsc_llm_source="/workspace/source/sdsc-llm.ts"
     local extension_dir="${PI_AGENT_DIR}/extensions"
-    local built_venv="/layers/paketo-buildpacks_python-package-managers-run/uv-env/venv"
-
-    # Renku's dependency-manager hook creates a writable wrapper virtualenv and
-    # resets UV_PROJECT_ENVIRONMENT in .bashrc. uv sync does not count inherited
-    # distributions as installed there, so target the already populated image
-    # environment instead. Reassert the launcher setting after that hook.
-    if [ -x "${built_venv}/bin/python" ]; then
-        append_bashrc_line "source ${built_venv}/bin/activate"
-        append_bashrc_line "export UV_PROJECT_ENVIRONMENT=${built_venv}"
-        if { true >&3; } 2>/dev/null; then
-            printf 'UV_PROJECT_ENVIRONMENT = "%s"\nVIRTUAL_ENV = "%s"\n' \
-                "${built_venv}" "${built_venv}" >&3
-        fi
-    fi
 
     mkdir -p "${extension_dir}" "${RENKU_WORKING_DIR}/.codex" "${RENKU_WORKING_DIR}/.claude"
     if [ -f "${sdsc_llm_source}" ]; then
@@ -247,12 +211,10 @@ else
     echo "WARNING: sshd setup failed; continuing session launch"
 fi
 
-task_names=("iroh-ssh" "AWS CLI" "Node tools" "Renku CLI")
+task_names=("iroh-ssh" "Node tools" "Renku CLI")
 task_pids=()
 
 setup_iroh_ssh &
-task_pids+=("$!")
-setup_aws_cli &
 task_pids+=("$!")
 setup_node_tools &
 task_pids+=("$!")

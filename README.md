@@ -27,7 +27,7 @@ RDKit 2026.9.2 and scikit-learn 1.9.1: validation ROC-AUC **0.7758**,
 test ROC-AUC **0.7289** (ten seeds; standard deviations round to 0.0000).
 Both the initial dataset download and cached-dataset run completed successfully.
 The Renku Linux CPU image also completed the full ten-seed benchmark with the
-same scores; Pi, Claude Code, Codex, AWS CLI, rnk, and SDSC model discovery were
+same scores; Pi, Claude Code, Codex, rnk, and SDSC model discovery were
 verified in the VS Code session. SSH requires the optional mounted key secrets.
 
 ## Renku build from code
@@ -38,13 +38,13 @@ After committing and pushing this branch, add/select a launcher with:
 | Setting | Value |
 | --- | --- |
 | Repository | `https://github.com/SwissDataScienceCenter/hiraku-all-hands.git` |
-| Revision | `kirschnj/ogb-benchmark` |
+| Revision | `feat/project-setup` |
 | Image source | Build from code |
 | Builder | Python |
 | Frontend | VS Code (`vscodium`) |
 | Context directory | `.` |
 | Platform | `linux/amd64` |
-| Launcher environment variable | `UV_PROJECT_ENVIRONMENT=/layers/paketo-buildpacks_python-package-managers-run/uv-env/venv` |
+| Launcher environment variable | `UV_PROJECT_ENVIRONMENT=/home/renku/work/.venv` |
 
 Select an accessible CPU resource class explicitly; start with at least 2 CPUs
 and 8 GiB RAM for the benchmark plus editor and agents. Use a larger class if
@@ -59,24 +59,63 @@ image's build revision. In a fresh session terminal run:
 
 ```bash
 cd /home/renku/work/hiraku-all-hands
-git switch kirschnj/ogb-benchmark
-uv run --locked ogbg-molhiv.py
+git switch feat/project-setup
+python ogbg-molhiv.py
+# Equivalently, use uv without syncing the inherited environment:
+uv run --locked --no-sync ogbg-molhiv.py
 ```
 
-The launcher variable targets the populated image virtualenv directly, so normal
-uv sync/run commands reuse its installed packages. The startup hook reasserts
-that setting and activates the same environment in terminals because Renku's
-dependency-manager hook otherwise resets it to a writable wrapper virtualenv.
-That wrapper inherits image packages, but uv sync can reinstall them, duplicating
-the image's dependencies. For intentional dependency changes use `uv add` or
-`uv sync --locked`, then rebuild the image to make them reproducible for everyone.
-Rebuild after dependency/build configuration
-changes; code-only changes require a fresh checkout/session rather than a rebuild.
+Renku provides a writable session virtualenv at `/home/renku/work/.venv` that
+inherits the image's packages.
+
+**uv limitation:** inherited packages are importable, but uv's installer does not
+count them as installed. Full `uv sync`, syncing `uv add`, and plain `uv run` can
+therefore reinstall image packages into the session, consuming extra disk/memory.
+Use plain `python` or `uv run --no-sync` with the built environment in Renku.
+
+For incremental session installs with dependency resolution, use
+`python -m pip install <package>`: pip recognizes inherited packages and puts
+additions in the writable virtualenv.
+
+### Hiraku release wheel
+
+`wheels/` contains the built Hiraku wheel and `hiraku-source.json`, which records
+its source ref, exact commit and SHA256. The default source is
+`feat/renku-api-psij-executor` from the private Hiraku repository. The committed
+wheel is a snapshot: it does not follow branch changes at image-build time.
+Renku installs the local wheel from `pyproject.toml`/`uv.lock`, so the image build
+does not need credentials to fetch a second private repository. Hiraku's regular
+dependencies are included in the image too.
+
+To refresh the snapshot from a branch, tag, or commit:
+
+```bash
+./scripts/update-hiraku-wheel.sh --ref feat/renku-api-psij-executor
+# Or select a release tag:
+./scripts/update-hiraku-wheel.sh --ref v0.1.1
+```
+
+The helper needs Python 3.11+, git, uv and normal Git authentication. It builds in
+a temporary checkout, leaving any existing Hiraku checkout untouched. It updates
+the wheel, provenance, project dependency and lockfile without syncing your
+environment, committing, or pushing. Review and commit those files together.
+`--repository` can select a different source repository when needed.
+
+The image uses this wheel independently of the branch checked out in the sibling
+`/home/renku/work/hiraku` directory. No editable path or `PYTHONPATH` override is
+needed. Refresh the wheel and rebuild to select a different Hiraku revision.
+
+To install a different wheel into the writable session environment without
+reinstalling its dependencies, use
+`uv pip install --python "$VIRTUAL_ENV/bin/python" --no-deps /path/to/package.whl`.
+Use `python -m pip install /path/to/package.whl` if its requirements also need to
+be resolved against inherited packages. Keep local session experiments separate
+from the demo's reproducible wheel and lockfile.
 
 ### Session tools and SSH
 
 As in the upstream base, the startup hook installs Node 24, Pi, Claude Code,
-Codex, AWS CLI and iroh-ssh at runtime, then configures persistent agent directories
+Codex and iroh-ssh at runtime, then configures persistent agent directories
 and the Pi SDSC LLM OAuth extension. It additionally installs Renku CLI `rnk`
 v0.7.2 from its official Linux release into `$RENKU_MOUNT_DIR/.local/bin`, without
 sudo or Python dependencies. Existing executables are reused on subsequent starts.
@@ -93,7 +132,7 @@ Without SSH secrets, the other tools still initialize. After startup, use
 [upstream SSH instructions](https://gitlab.datascience.ch/kirschnj/renku-docker-base).
 
 In a session terminal, verify `rnk --help`, `pi --version`, `claude --version`,
-`codex --version`, `aws --version`, and `iroh-ssh --help`. Authenticate interactively
+`codex --version` and `iroh-ssh --help`. Authenticate interactively
 with `rnk login`; in Pi use `/login` and choose SDSC LLM (OIDC).
 No credentials are included in the image or repository.
 

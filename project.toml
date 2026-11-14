@@ -15,6 +15,7 @@ include = [
     "project.toml",
     "pyproject.toml",
     "uv.lock",
+    "wheels/",
     ".python-version",
     "README.md",
     "sdsc-llm.ts"
