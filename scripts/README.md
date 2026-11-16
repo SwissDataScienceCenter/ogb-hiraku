@@ -49,3 +49,23 @@ If the wheel has already been rebuilt and only its hash is stale, run just:
 uv lock --upgrade-package hiraku
 uv sync
 ```
+
+## Restore the Renku VSCodium entrypoint
+
+If a Renku image rebuild resets the VSCodium launcher command, preview and
+reapply the project folder override with:
+
+```bash
+python3 scripts/fix-renku-vscodium.py \
+  --helper .codex/skills/renku/scripts/renku_agent.py \
+  --dry-run
+python3 scripts/fix-renku-vscodium.py \
+  --helper .codex/skills/renku/scripts/renku_agent.py
+```
+
+Run these commands in the project checkout with Renku authentication already
+configured. The helper patches launcher `01M7A3QW52ANYXERJJCX69M6R6` so
+VSCodium opens `/home/renku/work/ogb-hiraku` by default, then reads the launcher
+back to verify the change. It does not start, stop, or rebuild a session. Pass
+`--launcher <id>` if the target launcher has a different ID. The helper path
+can be omitted where the Renku skill is installed at its default path.
