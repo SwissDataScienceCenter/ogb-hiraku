@@ -1,0 +1,13 @@
+interface:
+  display_name: "Hiraku"
+  short_description: "Manage research records, experiments, jobs, and workflows"
+  default_prompt: "Use $hiraku to inspect my research project and its records."
+
+policy:
+  allow_implicit_invocation: true
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "hiraku"
+      description: "Hiraku project MCP server"

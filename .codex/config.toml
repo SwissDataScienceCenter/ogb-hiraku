@@ -1,0 +1,6 @@
+[mcp_servers.hiraku]
+command = "hiraku"
+args = ["mcp", "serve"]
+
+[shell_environment_policy]
+ingerit = "all"

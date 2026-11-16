@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "hiraku": {
+      "command": "hiraku",
+      "args": [
+        "mcp",
+        "serve"
+      ]
+    }
+  }
+}
