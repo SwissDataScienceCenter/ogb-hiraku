@@ -3,4 +3,4 @@ command = "hiraku"
 args = ["mcp", "serve"]
 
 [shell_environment_policy]
-ingerit = "all"
+inherit = "all"
