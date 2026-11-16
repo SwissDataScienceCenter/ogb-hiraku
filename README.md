@@ -102,6 +102,8 @@ or Pi with:
 pi
 ```
 
+> If you want to use Pi with SDSC LLMs run `/login` select SDSC LLM and then complete the OAuth flow.
+
 Ask the agent to inspect the records and previous runs first. Once you choose an
 experiment, have it explain its proposed changes, then launch a tracked run
 against the experiment record. Review the metrics yourself and ask the agent to
