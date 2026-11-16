@@ -43,7 +43,7 @@ the baseline hypothesis and evaluation metric.
 
 ## 2 - Find previous runs on the leaderboard
 
-The project has a default leaderboard connected to its hosted MLflow instance.
+The project has a default MLflow leaderboard visible at https://standings-antiques-look-plots.trycloudflare.com/#/?workspace=ddeq4clusters .
 List available leaderboards and inspect existing runs:
 
 ```bash
