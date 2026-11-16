@@ -76,33 +76,84 @@ directory. Start with a specific task, such as:
 > Inspect the Hiraku records and leaderboard, summarize the baseline, and suggest
 > one small experiment.
 
-### Codex, Claude Code, or Pi
+### Codex
 
-In this Renku environment, launch Codex with `--yolo`:
+Launch Codex in this Renku environment with:
 
 ```bash
 codex --yolo
 ```
 
-This starts Codex without interactive approval prompts. Give it a clear task and
-scope, for example:
+For optional alphaXiv literature search, create an API key at
+[alphaXiv API Keys](https://www.alphaxiv.org/settings/api-keys). Before
+launching an agent, export it in the shell (replace the placeholder):
 
-> Read the Hiraku records and inspect existing leaderboard runs. Suggest one
-> experiment and explain the tradeoffs.
+```bash
+export ALPHAXIV_API_KEY="<your-alphaXiv-api-key>"
+```
 
-You can start Claude Code with:
+Then add alphaXiv to Codex:
+
+```bash
+codex mcp add alphaxiv --url https://api.alphaxiv.org/mcp/v1 \
+  --bearer-token-env-var ALPHAXIV_API_KEY
+codex mcp list
+```
+
+Restart Codex if it is already running.
+
+### Claude Code
+
+Launch Claude Code with:
 
 ```bash
 claude --dangerously-skip-permissions
 ```
 
-or Pi with:
+With `ALPHAXIV_API_KEY` set in the shell, add alphaXiv to Claude Code:
+
+```bash
+claude mcp add --transport http --scope user alphaxiv \
+  https://api.alphaxiv.org/mcp/v1 \
+  --header 'Authorization: Bearer ${ALPHAXIV_API_KEY}'
+claude mcp list
+```
+
+Restart Claude Code if it is already running.
+
+### Pi
+
+Start Pi with:
 
 ```bash
 pi
 ```
 
-> If you want to use Pi with SDSC LLMs run `/login` select SDSC LLM and then complete the OAuth flow.
+> To use Pi with SDSC LLMs, run `/login`, select SDSC LLM, then complete the
+> OAuth flow.
+
+With `ALPHAXIV_API_KEY` set in the shell, add alphaXiv to Pi:
+
+```bash
+pi mcp add alphaxiv --url https://api.alphaxiv.org/mcp/v1 \
+  --bearer-token-env-var ALPHAXIV_API_KEY
+pi mcp list
+```
+
+Restart Pi if it is already running.
+
+The API key is read from the session environment; keep it out of the command
+and config files. The API key uses a bearer header and skips OAuth. See the
+[alphaXiv MCP guide](https://www.alphaxiv.org/docs/mcp) for details. Ask the
+agent to use alphaXiv to discover and read papers when you want to try the
+bundled literature-review skill.
+
+### Working with an agent
+
+Give the agent a clear task and scope, for example:
+
+> Read the Hiraku records and inspect existing leaderboard runs. Suggest one
+> experiment and explain the tradeoffs.
 
 Ask the agent to inspect the records and previous runs first. Once you choose an
 experiment, have it explain its proposed changes, then launch a tracked run
@@ -110,6 +161,4 @@ against the experiment record. Review the metrics yourself and ask the agent to
 help interpret what the results support.
 
 You can also mix manual and agent-assisted steps: explore records with the CLI,
-ask an agent to suggest a change, then run and analyze it yourself. The aim is to
-learn how Hiraku’s records, project code, tracked runs, and leaderboard fit
-together.
+ask an agent to suggest a change, then run and analyze it yourself.
