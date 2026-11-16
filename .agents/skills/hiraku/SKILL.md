@@ -19,68 +19,40 @@ Hiraku organizes data-science work around **records**, **runs**, and
 ## MCP quickstart
 
 Prefer connected Hiraku MCP tools for the operations they expose. Discover the
-tools through the host's tool interface and use their advertised schemas;
-the host may prefix the names shown below. The examples show a tool name and
-its JSON arguments, not Python or shell commands. The server is scoped to the
-project selected by the host, so no project argument is needed. Check
-`project_info` before changing project state.
+tools through the host's tool interface; the host may prefix their names. Rely
+on the schemas provided by the host. The server is scoped to the project
+selected by the host, so no project argument is needed. Check project settings
+before changing project state.
 
-Inspect the project and its records with `project_info {}` and `record_list {}`;
-read a record with `record_show {"record_id": "tasks/question"}`. Reuse an
-existing record when it matches the task. Record IDs are paths under
+Inspect the project and its records, then read relevant records before making
+changes. Reuse an existing record when it matches the task. Record IDs are paths under
 `hiraku/records/`, without `.md`. Relationships use `parent_id` and `related_to`,
 independently of directory placement. Fields are local to each record; read
 related records explicitly when their context matters.
 
-Create a record when requested or needed for the task. Pass its type and other
-metadata in `fields`; creation activates the record by default:
-
-```text
-record_create
-{
-  "record_id": "tasks/question",
-  "title": "Research question",
-  "fields": {"type": "task", "goal": "...", "question": "..."},
-  "markdown": "## Investigation\n\n..."
-}
-```
-
-Keep identity and relationships in named arguments, outside `fields`.
-Use `activate: false` when creating supporting material without switching the
-project-wide active record. Read a record before updating it:
-`record_update` merges `fields`, null clears a field, and `markdown` replaces
-the entire body when supplied. Preserve existing content that the task does
-not change.
+Create a record when requested or needed for the task. Keep its identity and
+relationships separate from its metadata fields. Creation activates the record
+by default; leave supporting records inactive when they should not change the
+project-wide active record. Record updates merge metadata fields, while a
+supplied Markdown body replaces the whole body. Preserve existing content the
+task does not change.
 
 ## Jobs and tracked evidence
 
-Submit commands as argv lists with explicit record attribution. `job_submit`
-defaults to background execution with `local-detached` and returns an `id`;
-check that ID with `job_status` or list jobs with `job_list`:
-
-```text
-job_submit
-{
-  "command": ["uv", "run", "python", "train.py", "--seed", "42"],
-  "record_id": "tasks/question"
-}
-job_status {"job_id": "<returned-id>"}
-job_list {"record_id": "tasks/question"}
-```
+For agent-launched commands, prefer submitting through the connected `job_submit`
+MCP tool. Submit the command as an argv list and include explicit record
+attribution. Submission defaults to background execution with `local-detached`
+and returns an ID; monitor it with `job_status` or `job_list`.
 
 Omitting `record_id` submits an unattributed job even if a record is active.
 Submission is not completion. If submission reports a history-write failure,
-inspect existing jobs before retrying: execution may already have started.
-Use CLI `hiraku run` when foreground streaming and an exit code are needed.
+inspect existing jobs before retrying: execution may already have started. Use
+CLI `hiraku run` for foreground streaming when that is specifically needed; use
+the CLI `hiraku job submit` only when the MCP tools are unavailable or the user
+asks for CLI commands.
 
-Discover configured leaderboards with `leaderboard_list {}`. Select one
-explicitly when several exist:
-
-```text
-runs {"leaderboard": "validation", "record_id": "tasks/question", "limit": 10}
-```
-
-Use a discovered leaderboard name in place of `validation`. Hiraku reads runs
+Discover configured leaderboards before reading runs, and select one explicitly
+when several exist. Hiraku reads runs
 from its configured tracking source; training code must log metrics and record
 attribution. A submitted job does not automatically create a tracked run.
 Record findings from observed results and include relevant job/run IDs and
@@ -88,21 +60,19 @@ metrics; distinguish missing evidence from a failed experiment.
 
 ## Project workflows
 
-For a requested workflow, discover it with `workflow_list {}` and inspect its
-definition at `hiraku://workflows/{workflow_id}` when needed. Start it with
-`workflow_start` using its `workflow_id` and input `arguments`. Follow the
-returned interrupt and response schema.
+For a requested workflow, discover available workflows and inspect its
+definition at `hiraku://workflows/{workflow_id}` when needed. Start it with the
+workflow ID and input arguments. Follow the returned interrupt and response
+schema.
 
-Continue an existing session with `workflow_status` and `workflow_resume`,
-using its `workflow_session_id` and current `checkpoint_id`; do not start a
-new session to continue paused work. Use `workflow_sessions` and
-`workflow_session_history` to recover prior work before repeating actions.
+Continue an existing session by checking its status and resuming with the
+current checkpoint; do not start a new session to continue paused work. Inspect
+the current checkpoint state before repeating actions.
 
-When an interrupt requests approval, call `workflow_approval` with the session
-ID, current `interrupt_id`, a concise `proposal`, and the proposed `response`.
-It opens structured MCP elicitation. Pass its accepted result as `response`
-to `workflow_resume` with the current checkpoint ID. If elicitation is
-cancelled or declined, leave the session paused. Do not fabricate approval.
+When an interrupt requests approval, use the approval tool to present a concise
+proposal and proposed response through structured MCP elicitation. Resume with
+the accepted result and current checkpoint. If elicitation is cancelled or
+declined, leave the session paused. Do not fabricate approval.
 
 ## CLI fallback
 
