@@ -1,6 +1,6 @@
 source:
   type: mlflow
-  experiment_name: ogbg-molhiv
+  experiment_name: ogb-hiraku-demo
   tracking_uri: https://mlflow.dev.renku.ch
 metrics:
 - name: valid/rocauc_mean
