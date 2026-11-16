@@ -32,13 +32,13 @@ verified in the VS Code session. SSH requires the optional mounted key secrets.
 
 ## Renku build from code
 
-Target project: <https://renkulab.io/p/sdsc/hiraku-all-hands>.
+Target project: <https://renkulab.io/p/sdsc/ogb-hiraku-demo>.
 After committing and pushing this branch, add/select a launcher with:
 
 | Setting | Value |
 | --- | --- |
-| Repository | `https://github.com/SwissDataScienceCenter/hiraku-all-hands.git` |
-| Revision | `feat/project-setup` |
+| Repository | `https://github.com/SwissDataScienceCenter/ogb-hiraku.git` |
+| Revision | `main` |
 | Image source | Build from code |
 | Builder | Python |
 | Frontend | VS Code (`vscodium`) |
@@ -58,8 +58,7 @@ Renku initially checks out the repository's default branch independently of the
 image's build revision. In a fresh session terminal run:
 
 ```bash
-cd /home/renku/work/hiraku-all-hands
-git switch feat/project-setup
+cd /home/renku/work/ogb-hiraku
 python ogbg-molhiv.py
 # Equivalently, use uv without syncing the inherited environment:
 uv run --locked --no-sync ogbg-molhiv.py
