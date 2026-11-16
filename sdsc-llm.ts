@@ -318,13 +318,18 @@ export default function (pi: ExtensionAPI) {
     api: "openai-completions",
     models: [
       {
-        id: "google/gemma-4-26B-A4B-it",
-        name: "Gemma 4 26B",
+        id: "Qwen/Qwen3.8-27B-FP8",
+        name: "Qwen 3.8 27B",
         reasoning: true,
         input: ["text"],
         cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
         contextWindow: 256000,
         maxTokens: 32768,
+        compat: {
+          supportsDeveloperRole: false,
+          supportsReasoningEffort: false,
+          thinkingFormat: "qwen",
+        },
       },
       {
         id: "Qwen/Qwen3.6-35B-A3B-FP8",
