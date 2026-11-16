@@ -652,7 +652,7 @@ dependencies = [
     { name = "rich" },
 ]
 wheels = [
-    { filename = "hiraku-0.1.1-py3-none-any.whl", hash = "sha256:58f69e4c43b3792315d065caac58d64790d90e800ae4f1ca9919eff9c1982b76" },
+    { filename = "hiraku-0.1.1-py3-none-any.whl", hash = "sha256:3485177737f81ffb780e8f7553f8d4eec9276c526a66ec4703eaf7b082257626" },
 ]
 
 [package.optional-dependencies]
