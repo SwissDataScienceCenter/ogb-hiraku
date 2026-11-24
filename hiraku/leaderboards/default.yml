@@ -1,0 +1,9 @@
+source:
+  type: mlflow
+  database: mlflow.db
+  experiment_name: ogb-hiraku
+metrics:
+- name: val/rocauc_std
+  direction: minimize
+- name: val/rocauc_mean
+  direction: maximize
