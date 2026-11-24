@@ -11,11 +11,9 @@ type = "Apache-2.0"
 
 [io.buildpacks]
 include = [
-    "init.d/",
     "project.toml",
     "pyproject.toml",
     "uv.lock",
-    "wheels/",
     ".python-version",
     "README.md",
     "sdsc-llm.ts"

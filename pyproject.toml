@@ -1,7 +1,7 @@
 [project]
-name = "benchmark"
+name = "ogb-hiraku"
 version = "0.1.0"
-description = "OGBG-MolHIV fingerprint baseline and Renku agent coding environment"
+description = "Hiraku demo project for OGBG-MolHIV dataset"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -19,7 +19,6 @@ dependencies = [
 # images and session caches small while using the normal PyPI wheel on macOS.
 [tool.uv.sources]
 torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
-hiraku = { path = "wheels/hiraku-0.1.1-py3-none-any.whl" }
 
 [[tool.uv.index]]
 name = "pytorch-cpu"

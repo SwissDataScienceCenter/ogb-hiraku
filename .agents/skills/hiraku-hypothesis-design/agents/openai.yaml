@@ -1,0 +1,13 @@
+interface:
+  display_name: "Hiraku Hypothesis Design"
+  short_description: "Develop and select evidence-grounded experiment hypotheses"
+  default_prompt: "Use $hiraku-hypothesis-design to develop and select a hypothesis for my research question."
+
+policy:
+  allow_implicit_invocation: true
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "hiraku"
+      description: "Hiraku project MCP server"
