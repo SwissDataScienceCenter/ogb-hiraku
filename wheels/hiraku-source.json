@@ -1,8 +1,0 @@
-{
-  "repository": "https://github.com/SwissDataScienceCenter/hiraku.git",
-  "ref": "release/v0.2.0",
-  "commit": "e3ae2edd4fe400306099b2b5aa62bf8861001753",
-  "version": "0.1.1",
-  "wheel": "hiraku-0.1.1-py3-none-any.whl",
-  "sha256": "3485177737f81ffb780e8f7553f8d4eec9276c526a66ec4703eaf7b082257626"
-}

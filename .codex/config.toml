@@ -1,7 +1,4 @@
 [mcp_servers.hiraku]
 command = "hiraku"
 args = ["mcp", "serve"]
-env_vars = ["MLFLOW_WORKSPACE", "MLFLOW_TRACKING_URI", "MLFLOW_EXPERIMENT_NAME", "MLFLOW_TRACKING_USERNAME", "MLFLOW_TRACKING_PASSWORD"]
-
-[shell_environment_policy]
-inherit = "all"
+default_tools_approval_mode = "approve"
