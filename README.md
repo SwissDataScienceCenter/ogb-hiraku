@@ -35,7 +35,9 @@ From the repository directory, launch your preferred agent.
 | Claude Code | `claude` |
 | Pi | `pi` |
 
-To use Pi with SDSC LLMs, run `/login`, select SDSC LLM, and complete OAuth. Additional setup instructions are in the [SDSC LLM docs](https://swissdatasciencecenter.github.io/llm-docs/).
+To use Pi with SDSC hosted LLMs, install the extension in the local project with `pi install -l git:github.com/rokroskar/pi-sdsc-vllm`.
+
+Then run `/login`, select SDSC LLM, and complete OAuth. Additional setup instructions are in the [SDSC LLM docs](https://swissdatasciencecenter.github.io/llm-docs/).
 
 Give the agent this prompt.
 
